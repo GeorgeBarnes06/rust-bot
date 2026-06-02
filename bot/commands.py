@@ -8,11 +8,19 @@ def setup_commands(tree: app_commands.CommandTree, socket, config):
         await interaction.response.defer()
         server_info = await socket.get_info()
         time = await socket.get_time()
-        await interaction.followup.send(
-            f"🟢 **{server_info.name}**\n"
-            f"👥 Players: {server_info.players}/{server_info.max_players}\n"
-            f"🕐 Time: {time.time}"
+
+        embed = discord.Embed(
+            title="Server Information",
+            color=discord.Color.green()
         )
+
+        embed.set_thumbnail(url="https://i.imgur.com/youricon.png")
+        embed.add_field(name="Players", value=f"{server_info.players}/{server_info.max_players}", inline=True)
+        embed.add_field(name="Time", value=time.time, inline=True)
+        embed.add_field(name="Wipe", value="Unknown", inline=True)
+        embed.set_footer(text=server_info.name)
+
+        await interaction.followup.send(embed=embed)  # indented inside the function
 
     @tree.command(name="team", description="Get team status")
     async def team(interaction: discord.Interaction):
