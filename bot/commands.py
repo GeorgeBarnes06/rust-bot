@@ -23,10 +23,6 @@ def setup_commands(tree: app_commands.CommandTree, socket, config):
 
         await interaction.followup.send(embed=embed)  # indented inside the function
 
-    @tree.command(name="team", description="Get team status")
-    async def team(interaction: discord.Interaction):
-        pass
-
     @tree.command(name="time", description="Get in-game time")
     async def time_cmd(interaction: discord.Interaction):
         pass
@@ -41,3 +37,11 @@ def setup_commands(tree: app_commands.CommandTree, socket, config):
         with open("config.json", "w") as f:
             json.dump(config, f, indent=4)
         await interaction.response.send_message(f"✅ Bot channel set to {channel.mention}")
+    
+    @tree.command(name="team", description="Get team status")
+    async def team(interaction: discord.Interaction):
+        await interaction.response.defer()
+        team_info = await socket.get_team_info()
+        member = team_info.members[0]  # just check first member
+        print(vars(member))
+        await interaction.followup.send("check terminal")
