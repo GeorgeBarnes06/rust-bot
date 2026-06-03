@@ -1,5 +1,6 @@
 import discord
 from discord import app_commands
+import json
 
 def setup_commands(tree: app_commands.CommandTree, socket, config):
 
@@ -33,3 +34,10 @@ def setup_commands(tree: app_commands.CommandTree, socket, config):
     @tree.command(name="players", description="Get player count")
     async def players(interaction: discord.Interaction):
         pass
+
+    @tree.command(name="setchannel", description="Set the channel for the bot to talk in")
+    async def setchannel(interaction: discord.Interaction, channel: discord.TextChannel):
+        config["channels"]["main"] = str(channel.id)
+        with open("config.json", "w") as f:
+            json.dump(config, f, indent=4)
+        await interaction.response.send_message(f"✅ Bot channel set to {channel.mention}")
